@@ -10,7 +10,7 @@ on:
         type: string
 permissions: {}
 jobs:
-  maybe-release:
+  PR:
     permissions:
       contents: write
       pull-requests: write
@@ -28,8 +28,8 @@ jobs:
           release-type: node
 
   release:
-    needs: maybe-release
-    if: ${{ needs.maybe-release.outputs.is_release_created }}
+    needs: PR
+    if: ${{ needs.PR.outputs.is_release_created }}
     permissions:
       contents: write
       pull-requests: write
@@ -64,6 +64,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           file: "src/${{ inputs.manifest-file }};/tmp/${{ inputs.system-name }}.zip"
-          release_id: ${{ needs.maybe-release.outputs.release_id }}
+          release_id: ${{ needs.PR.outputs.release_id }}
           overwrite: true
           verbose: true
